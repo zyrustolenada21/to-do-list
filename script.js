@@ -8,7 +8,9 @@ function createTask(taskText) {
     const li = document.createElement("li");
     li.textContent = taskText;
 
-    li.addEventListener("dblclick", function () {
+    let pressTimer;
+
+    function completeTask() {
         li.classList.toggle("completed");
 
         if (li.classList.contains("completed")) {
@@ -25,6 +27,24 @@ function createTask(taskText) {
                 }
             }, 10000);
         }
+    }
+
+    // Desktop: Double-click
+    li.addEventListener("dblclick", completeTask);
+
+    // Mobile: Long press
+    li.addEventListener("touchstart", function () {
+        pressTimer = setTimeout(function () {
+            completeTask();
+        }, 1000); // Hold for 1 second
+    });
+
+    li.addEventListener("touchend", function () {
+        clearTimeout(pressTimer);
+    });
+
+    li.addEventListener("touchmove", function () {
+        clearTimeout(pressTimer);
     });
 
     taskList.appendChild(li);
